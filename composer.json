@@ -17,5 +17,12 @@
         "psr-4": {
             "DcGeneral\\": "src/"
         }
+    },
+    "extra": {
+        "contao": {
+            "sources": {
+                "module": "system/modules/dc-general-single-model"
+            }
+        }
     }
 }

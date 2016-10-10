@@ -27,28 +27,6 @@ class SingleModelDataProvider extends DefaultDataProvider
 {
 
     /**
-     * {@inheritDoc}
-     */
-    public function setBaseConfig(array $config)
-    {
-        // Create database table if not yet
-        $table = $config['source'];
-        $sql = <<<SQL
-CREATE TABLE IF NOT EXISTS `{$table}` (
-  `name` varchar(128) NOT NULL default '',
-  `value` text NULL,
-  PRIMARY KEY  (`name`),
-  UNIQUE (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SQL;
-
-        \Database::getInstance()->query($sql);
-
-        parent::setBaseConfig($config);
-    }
-
-
-    /**
      * Exception throwing convenience method.
      *
      * Convenience method in this data provider that simply throws an Exception stating that the passed method name
