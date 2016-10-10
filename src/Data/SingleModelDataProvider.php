@@ -1,11 +1,11 @@
 <?php
 /**
- * E-POSTBUSINESS API integration for Contao Open Source CMS
+ * Single model DataProvider for DcGeneral
  *
- * Copyright (c) 2015-2016 Richard Henkenjohann
+ * Copyright (c) 2016 Richard Henkenjohann
  *
- * @package E-POST
- * @author  Richard Henkenjohann <richard-epost@henkenjohann.me>
+ * @package DcGeneral
+ * @author  Richard Henkenjohann <richardhenkenjohann@googlemail.com>
  */
 
 namespace DcGeneral\Data;
@@ -19,6 +19,10 @@ use ContaoCommunityAlliance\DcGeneral\Data\ModelInterface;
 use ContaoCommunityAlliance\DcGeneral\Exception\DcGeneralException;
 
 
+/**
+ * Class SingleModelDataProvider
+ * @package DcGeneral\Data
+ */
 class SingleModelDataProvider extends DefaultDataProvider
 {
 

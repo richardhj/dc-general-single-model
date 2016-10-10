@@ -1,11 +1,11 @@
 <?php
 /**
- * E-POSTBUSINESS API integration for Contao Open Source CMS
+ * Single model DataProvider for DcGeneral
  *
- * Copyright (c) 2015-2016 Richard Henkenjohann
+ * Copyright (c) 2016 Richard Henkenjohann
  *
- * @package E-POST
- * @author  Richard Henkenjohann <richard-epost@henkenjohann.me>
+ * @package DcGeneral
+ * @author  Richard Henkenjohann <richardhenkenjohann@googlemail.com>
  */
 
 namespace DcGeneral\Contao\View\Contao2BackendView;
@@ -16,6 +16,10 @@ use ContaoCommunityAlliance\DcGeneral\Contao\View\Contao2BackendView\BaseView;
 use ContaoCommunityAlliance\DcGeneral\Exception\DcGeneralRuntimeException;
 
 
+/**
+ * Class SingleModelView
+ * @package DcGeneral\Contao\View\Contao2BackendView
+ */
 class SingleModelView extends BaseView
 {
 
