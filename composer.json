@@ -1,0 +1,21 @@
+{
+    "name": "richardhj/dc-general-single-model",
+    "description": "DcGeneral DataProvider and View for single model DCAs.",
+    "type": "contao-module",
+    "authors": [
+        {
+            "name": "Richard Henkenjohann",
+            "email": "richardhenkenjohann@googlemail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^5.3 || ^7.0",
+        "contao-community-alliance/dc-general": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "DcGeneral\\": "src/"
+        }
+    }
+}
