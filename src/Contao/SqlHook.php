@@ -1,17 +1,20 @@
 <?php
-
 /**
- * E-POSTBUSINESS API integration for Contao Open Source CMS
+ * Single model DataProvider for DcGeneral
  *
- * Copyright (c) 2015-2016 Richard Henkenjohann
+ * Copyright (c) 2016 Richard Henkenjohann
  *
- * @package E-POST
- * @author  Richard Henkenjohann <richard-epost@henkenjohann.me>
+ * @package DcGeneral
+ * @author  Richard Henkenjohann <richardhenkenjohann@googlemail.com>
  */
 
 namespace DcGeneral\Contao;
 
 
+/**
+ * Class SqlHook
+ * @package DcGeneral\Contao
+ */
 class SqlHook
 {
 
@@ -61,7 +64,6 @@ class SqlHook
                         ],
                         'TABLE_CREATE_DEFINITIONS' => [
                             'PRIMARY' => 'PRIMARY KEY  (`name`)',
-                            'UNIQUE'  => 'UNIQUE (`name`)',
                         ],
                         'TABLE_OPTIONS'            => 'ENGINE=MyISAM DEFAULT CHARSET=utf8',
                     ];
