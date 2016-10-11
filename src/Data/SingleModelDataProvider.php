@@ -93,7 +93,7 @@ class SingleModelDataProvider extends DefaultDataProvider
 
         if ($result->numRows) {
             while ($result->next()) {
-                $model->setProperty($result->name, $result->value);
+                $model->setProperty($result->field, $result->value);
             }
         }
 
@@ -199,8 +199,8 @@ class SingleModelDataProvider extends DefaultDataProvider
         $query = 'INSERT INTO '.$this->strSource.' %s';
         $queryUpdate = 'UPDATE %s';
 
-        foreach ($objItem->getPropertiesAsArray() as $name => $value) {
-            if ('id' === $name) {
+        foreach ($objItem->getPropertiesAsArray() as $field => $value) {
+            if ('id' === $field) {
                 continue;
             }
 
@@ -219,7 +219,7 @@ class SingleModelDataProvider extends DefaultDataProvider
                             ->query
                     )
                 )
-                ->set(['name' => $name, 'value' => $value])
+                ->set(['field' => $field, 'value' => $value])
                 ->execute();
         }
 
@@ -260,7 +260,7 @@ class SingleModelDataProvider extends DefaultDataProvider
      */
     public function fieldExists($strField)
     {
-        return $this->objDatabase->prepare('SELECT * FROM '.$this->strSource.' WHERE name=?')->execute(
+        return $this->objDatabase->prepare('SELECT * FROM '.$this->strSource.' WHERE field=?')->execute(
             $strField
         )->numRows ? true : false;
     }

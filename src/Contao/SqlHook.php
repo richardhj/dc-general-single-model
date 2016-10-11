@@ -59,11 +59,11 @@ class SqlHook
                 ) {
                     $definition[$table] = [
                         'TABLE_FIELDS'             => [
-                            'name'  => '`name` varchar(128) NOT NULL default \'\'',
+                            'field' => '`field` varchar(128) NOT NULL default \'\'',
                             'value' => '`value` text NULL',
                         ],
                         'TABLE_CREATE_DEFINITIONS' => [
-                            'PRIMARY' => 'PRIMARY KEY  (`name`)',
+                            'PRIMARY' => 'PRIMARY KEY  (`field`)',
                         ],
                         'TABLE_OPTIONS'            => 'ENGINE=MyISAM DEFAULT CHARSET=utf8',
                     ];
