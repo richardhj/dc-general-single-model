@@ -40,6 +40,7 @@ $GLOBALS['TL_DCA'][$table] = [
     ],
 
 ```
+The extension create a database table (with key=>value structure) on its when using the database installer.
 
 [ico-version]: https://img.shields.io/packagist/v/richardhj/dc-general-single-model.svg?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-LGPL-brightgreen.svg?style=flat-square
