@@ -17,7 +17,9 @@ $ composer require richardhj/dc-general-single-model
 
 For extension developers.
 
-### Minimum dca
+### DCA
+
+Minimum dca configuration
 
 ```php
 /**
@@ -41,6 +43,34 @@ $GLOBALS['TL_DCA'][$table] = [
 
 ```
 The extension create a database table (with key=>value structure) on its when using the database installer.
+
+### Model
+
+A model for accessing data
+
+```php
+namespace MagickImages\Model;
+
+use DcGeneral\Contao\Model\AbstractSingleModel;
+
+/**
+ * @property string $implementation
+ */
+class Config extends AbstractSingleModel
+{
+
+    /**
+     * {@inheritdoc}
+     */
+    protected static $strTable = 'tl_magickimages_config';
+
+
+    /**
+     * {@inheritdoc}
+     */
+    protected static $objInstance;
+}
+```
 
 [ico-version]: https://img.shields.io/packagist/v/richardhj/dc-general-single-model.svg?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-LGPL-brightgreen.svg?style=flat-square
