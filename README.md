@@ -36,7 +36,7 @@ $GLOBALS['TL_DCA'][$table] = [
                 'class' => 'DcGeneral\Data\SingleModelDataProvider',
             ],
         ],
-        'view'          => 'DcGeneral\Contao\View\Contao2BackendView\SingleModelView',
+        'view'          => 'DcGeneral\View\SingleModelView',
     ],
 
 ```

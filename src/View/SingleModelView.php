@@ -8,8 +8,7 @@
  * @author  Richard Henkenjohann <richardhenkenjohann@googlemail.com>
  */
 
-namespace DcGeneral\Contao\View\Contao2BackendView;
-
+namespace DcGeneral\View;
 
 use ContaoCommunityAlliance\DcGeneral\Action;
 use ContaoCommunityAlliance\DcGeneral\Contao\View\Contao2BackendView\BaseView;
@@ -18,7 +17,7 @@ use ContaoCommunityAlliance\DcGeneral\Exception\DcGeneralRuntimeException;
 
 /**
  * Class SingleModelView
- * @package DcGeneral\Contao\View\Contao2BackendView
+ * @package DcGeneral\View
  */
 class SingleModelView extends BaseView
 {
