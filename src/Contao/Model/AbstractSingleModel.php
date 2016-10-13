@@ -51,7 +51,13 @@ abstract class AbstractSingleModel
      */
     public function __construct()
     {
-        $result = \Database::getInstance()->query('SELECT * FROM '.static::$strTable);
+        // Catch an exception as it would make the Database\Installer unavailable in some cases
+        try {
+            $result = \Database::getInstance()->query('SELECT * FROM '.static::$strTable);
+        } catch (\Exception $e) {
+            \System::log(sprintf('Database (table %s) ist not up to date', static::$strTable), __METHOD__, TL_ERROR);
+            $result = null;
+        }
 
         if (null !== $result) {
             while ($result->next()) {
