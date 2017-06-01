@@ -22,21 +22,21 @@ abstract class AbstractSingleModel
      * Table name
      * @var string
      */
-    protected static $strTable;
+    protected static $table;
 
 
     /**
      * Data
      * @var array
      */
-    protected $arrData = [];
+    protected $data = [];
 
 
     /**
      * Modified keys
      * @var array
      */
-    protected $arrModified = [];
+    protected $modifiedKeys = [];
 
 
     /**
@@ -51,11 +51,11 @@ abstract class AbstractSingleModel
      */
     public function __construct()
     {
-        $result = \Database::getInstance()->query('SELECT * FROM '.static::$strTable);
+        $result = \Database::getInstance()->query('SELECT * FROM '.static::$table);
 
         if (null !== $result) {
             while ($result->next()) {
-                $this->arrData[$result->field] = $result->value;
+                $this->data[$result->field] = $result->value;
             }
         }
     }
@@ -79,28 +79,17 @@ abstract class AbstractSingleModel
      *
      * @param string $strKey   The property name
      * @param mixed  $varValue The property value
+     *
+     * @return self
      */
-    public function __set($strKey, $varValue)
+    public function setProperty($strKey, $varValue)
     {
-        if ($this->$strKey === $varValue) {
-            return;
+        if ($this->getProperty($strKey) === $varValue) {
+            return $this;
         }
 
-        $this->markModified($strKey);
-        $this->arrData[$strKey] = $varValue;
-    }
-
-
-    /**
-     * Check whether a property is set
-     *
-     * @param string $strKey The property key
-     *
-     * @return boolean True if the property is set
-     */
-    public function __isset($strKey)
-    {
-        return isset($this->arrData[$strKey]);
+        $this->data[$strKey] = $varValue;
+        return $this->markModified($strKey);
     }
 
 
@@ -111,10 +100,10 @@ abstract class AbstractSingleModel
      *
      * @return mixed|null The property value or null
      */
-    public function __get($strKey)
+    public function getProperty($strKey)
     {
-        if (isset($this->arrData[$strKey])) {
-            return $this->arrData[$strKey];
+        if (isset($this->data[$strKey])) {
+            return $this->data[$strKey];
         }
 
         return null;
@@ -128,7 +117,7 @@ abstract class AbstractSingleModel
      */
     public static function getTable()
     {
-        return static::$strTable;
+        return static::$table;
     }
 
 
@@ -136,12 +125,16 @@ abstract class AbstractSingleModel
      * Mark a field as modified
      *
      * @param string $strKey The field key
+     *
+     * @return self
      */
     public function markModified($strKey)
     {
-        if (!isset($this->arrModified[$strKey])) {
-            $this->arrModified[$strKey] = $this->arrData[$strKey];
+        if (!isset($this->modifiedKeys[$strKey])) {
+            $this->modifiedKeys[$strKey] = $this->data[$strKey];
         }
+
+        return $this;
     }
 
 
@@ -151,27 +144,24 @@ abstract class AbstractSingleModel
      */
     public function save()
     {
-        $query = 'INSERT INTO '.static::$strTable.' %s';
+        $query = 'INSERT INTO '.static::$table . ' %s';
         $queryUpdate = 'UPDATE %s';
 
-        foreach ($this->arrModified as $field) {
-
+        foreach ($this->modifiedKeys as $field) {
             \Database::getInstance()
-                ->prepare
-                (
+                ->prepare(
                     $query.
                     ' ON DUPLICATE KEY '.
-                    str_replace
-                    (
+                    str_replace(
                         'SET ',
                         '',
                         \Database::getInstance()
                             ->prepare($queryUpdate)
-                            ->set(['value' => $this->$field])
+                            ->set(['value' => $this->getProperty($field)])
                             ->query
                     )
                 )
-                ->set(['field' => $field, 'value' => $this->$field])
+                ->set(['field' => $field, 'value' => $this->getProperty($field)])
                 ->execute();
         }
 
