@@ -1,19 +1,27 @@
 <?php
+
 /**
- * Single model DataProvider for DcGeneral
+ * This file is part of richardhj/dc-general-single-model.
  *
- * Copyright (c) 2016 Richard Henkenjohann
+ * Copyright (c) 2016-2017 Richard Henkenjohann
  *
- * @package DcGeneral
- * @author  Richard Henkenjohann <richardhenkenjohann@googlemail.com>
+ * @package   richardhj/contao-textfield-multiple
+ * @author    Richard Henkenjohann <richardhenkenjohann@googlemail.com>
+ * @copyright 2016-2017 Richard Henkenjohann
+ * @license   https://github.com/richardhj/dc-general-single-model/blob/master/LICENSE LGPL-3.0
  */
 
-namespace DcGeneral\Contao;
+namespace Richardhj\DcGeneral\Contao;
+
+use Contao\Config;
+use Contao\Controller;
+use Contao\ModuleLoader;
 
 
 /**
  * Class SqlHook
- * @package DcGeneral\Contao
+ *
+ * @package Richardhj\DcGeneral\Contao
  */
 class SqlHook
 {
@@ -30,20 +38,20 @@ class SqlHook
         $included = [];
 
         // Ignore the internal cache
-        $bypassCache = \Config::get('bypassCache');
-        \Config::set('bypassCache', true);
+        $bypassCache = Config::get('bypassCache');
+        Config::set('bypassCache', true);
 
         // Only check the active modules (see #4541)
-        foreach (\ModuleLoader::getActive() as $module) {
-            $dir = 'system/modules/'.$module.'/dca';
+        foreach (ModuleLoader::getActive() as $module) {
+            $dir = 'system/modules/' . $module . '/dca';
 
-            if (!is_dir(TL_ROOT.'/'.$dir)) {
+            if (!is_dir(TL_ROOT . '/' . $dir)) {
                 continue;
             }
 
-            foreach (scan(TL_ROOT.'/'.$dir) as $file) {
+            foreach (scan(TL_ROOT . '/' . $dir) as $file) {
                 // Ignore non PHP files and files which have been included before
-                if (substr($file, -4) != '.php' || in_array($file, $included)) {
+                if ('.php' !== substr($file, -4) || in_array($file, $included)) {
                     continue;
                 }
 
@@ -51,7 +59,7 @@ class SqlHook
 
                 // Load the data container
                 if (!isset($GLOBALS['loadDataContainer'][$table])) {
-                    \Controller::loadDataContainer($table);
+                    Controller::loadDataContainer($table);
                 }
 
                 if ('General' === $GLOBALS['TL_DCA'][$table]['config']['dataContainer']
@@ -74,7 +82,7 @@ class SqlHook
         }
 
         // Restore the cache settings
-        \Config::set('bypassCache', $bypassCache);
+        Config::set('bypassCache', $bypassCache);
 
         return $definition;
     }

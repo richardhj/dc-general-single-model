@@ -1,15 +1,18 @@
 <?php
+
 /**
- * Single model DataProvider for DcGeneral
+ * This file is part of richardhj/dc-general-single-model.
  *
- * Copyright (c) 2016 Richard Henkenjohann
+ * Copyright (c) 2016-2017 Richard Henkenjohann
  *
- * @package DcGeneral
- * @author  Richard Henkenjohann <richardhenkenjohann@googlemail.com>
+ * @package   richardhj/contao-textfield-multiple
+ * @author    Richard Henkenjohann <richardhenkenjohann@googlemail.com>
+ * @copyright 2016-2017 Richard Henkenjohann
+ * @license   https://github.com/richardhj/dc-general-single-model/blob/master/LICENSE LGPL-3.0
  */
 
 
 /**
  * Hooks
  */
-$GLOBALS['TL_HOOKS']['sqlGetFromDca'][] = ['DcGeneral\Contao\SqlHook', 'addSqlDefinition'];
+$GLOBALS['TL_HOOKS']['sqlGetFromDca'][] = ['Richardhj\DcGeneral\Contao\SqlHook', 'addSqlDefinition'];

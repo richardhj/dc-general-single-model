@@ -11,11 +11,15 @@
     ],
     "require": {
         "php": "^5.3 || ^7.0",
+        "contao/core": "^3.2",
         "contao-community-alliance/dc-general": "^2.0"
+    },
+    "conflict": {
+        "contao-community-alliance/dc-general": "<2.0.0-beta39"
     },
     "autoload": {
         "psr-4": {
-            "DcGeneral\\": "src/"
+            "Richardhj\\DcGeneral\\": "src/"
         }
     },
     "extra": {

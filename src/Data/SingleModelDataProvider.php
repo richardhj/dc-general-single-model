@@ -1,19 +1,23 @@
 <?php
+
 /**
- * Single model DataProvider for DcGeneral
+ * This file is part of richardhj/dc-general-single-model.
  *
- * Copyright (c) 2016 Richard Henkenjohann
+ * Copyright (c) 2016-2017 Richard Henkenjohann
  *
- * @package DcGeneral
- * @author  Richard Henkenjohann <richardhenkenjohann@googlemail.com>
+ * @package   richardhj/contao-textfield-multiple
+ * @author    Richard Henkenjohann <richardhenkenjohann@googlemail.com>
+ * @copyright 2016-2017 Richard Henkenjohann
+ * @license   https://github.com/richardhj/dc-general-single-model/blob/master/LICENSE LGPL-3.0
  */
 
-namespace DcGeneral\Data;
+namespace Richardhj\DcGeneral\Data;
 
 
 use ContaoCommunityAlliance\DcGeneral\Data\CollectionInterface;
 use ContaoCommunityAlliance\DcGeneral\Data\ConfigInterface;
 use ContaoCommunityAlliance\DcGeneral\Data\DefaultDataProvider;
+use ContaoCommunityAlliance\DcGeneral\Data\DefaultDataProviderSqlUtils;
 use ContaoCommunityAlliance\DcGeneral\Data\DefaultModel;
 use ContaoCommunityAlliance\DcGeneral\Data\ModelInterface;
 use ContaoCommunityAlliance\DcGeneral\Exception\DcGeneralException;
@@ -21,7 +25,8 @@ use ContaoCommunityAlliance\DcGeneral\Exception\DcGeneralException;
 
 /**
  * Class SingleModelDataProvider
- * @package DcGeneral\Data
+ *
+ * @package Richardhj\DcGeneral\Data
  */
 class SingleModelDataProvider extends DefaultDataProvider
 {
@@ -32,19 +37,19 @@ class SingleModelDataProvider extends DefaultDataProvider
      * Convenience method in this data provider that simply throws an Exception stating that the passed method name
      * should not be called on this data provider, as it is only intended to display an edit mask.
      *
-     * @param string $strMethod The name of the method being called.
+     * @param string $method The name of the method being called.
      *
      * @throws DcGeneralException Throws always an exception telling that the method (see param $strMethod) must not be
      *                            called.
      *
      * @return void
      */
-    protected function youShouldNotCallMe($strMethod)
+    protected function youShouldNotCallMe($method)
     {
         throw new DcGeneralException(
             sprintf(
                 'Error, %s not available, as the data provider is intended for edit mode only.',
-                $strMethod
+                $method
             ),
             1
         );
@@ -73,23 +78,21 @@ class SingleModelDataProvider extends DefaultDataProvider
      *
      * This data provider only supports retrieving by id so use $objConfig->setId() to populate the config with an Id.
      *
-     * @param ConfigInterface $objConfig The configuration to use.
+     * @param ConfigInterface $config The configuration to use.
      *
      * @return ModelInterface
      *
      * @throws DcGeneralException If config object does not contain an Id.
      */
-    public function fetch(ConfigInterface $objConfig)
+    public function fetch(ConfigInterface $config)
     {
-        $query = sprintf(
+        $query  = sprintf(
             'SELECT %s FROM %s',
-            $this->buildFieldQuery($objConfig),
+            DefaultDataProviderSqlUtils::buildFieldQuery($config, $this->idProperty),
             $this->strSource
         );
-
         $result = $this->objDatabase->query($query);
-
-        $model = $this->getEmptyModel();
+        $model  = $this->getEmptyModel();
 
         if ($result->numRows) {
             while ($result->next()) {
@@ -104,7 +107,7 @@ class SingleModelDataProvider extends DefaultDataProvider
     /**
      * Unsupported in this data provider, throws an Exception.
      *
-     * @param ConfigInterface $objConfig Unused.
+     * @param ConfigInterface $config Unused.
      *
      * @return void
      *
@@ -112,7 +115,7 @@ class SingleModelDataProvider extends DefaultDataProvider
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function fetchAll(ConfigInterface $objConfig)
+    public function fetchAll(ConfigInterface $config)
     {
         $this->youShouldNotCallMe(__METHOD__);
     }
@@ -121,7 +124,7 @@ class SingleModelDataProvider extends DefaultDataProvider
     /**
      * Unsupported in this data provider, throws an Exception.
      *
-     * @param ConfigInterface $objConfig Unused.
+     * @param ConfigInterface $config Unused.
      *
      * @return void
      *
@@ -129,7 +132,7 @@ class SingleModelDataProvider extends DefaultDataProvider
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getCount(ConfigInterface $objConfig)
+    public function getCount(ConfigInterface $config)
     {
         $this->youShouldNotCallMe(__METHOD__);
     }
@@ -138,11 +141,11 @@ class SingleModelDataProvider extends DefaultDataProvider
     /**
      * Unsupported in this data provider, throws an Exception.
      *
-     * @param string $strField Unused.
+     * @param string $field Unused.
      *
-     * @param mixed  $varNew   Unused.
+     * @param mixed  $new   Unused.
      *
-     * @param int    $intId    Unused.
+     * @param int    $id    Unused.
      *
      * @return void
      *
@@ -150,7 +153,7 @@ class SingleModelDataProvider extends DefaultDataProvider
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function isUniqueValue($strField, $varNew, $intId = null)
+    public function isUniqueValue($field, $new, $id = null)
     {
         $this->youShouldNotCallMe(__METHOD__);
     }
@@ -159,7 +162,7 @@ class SingleModelDataProvider extends DefaultDataProvider
     /**
      * Unsupported in this data provider, throws an Exception.
      *
-     * @param string $strField Unused.
+     * @param string $field Unused.
      *
      * @return void
      *
@@ -167,7 +170,7 @@ class SingleModelDataProvider extends DefaultDataProvider
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function resetFallback($strField)
+    public function resetFallback($field)
     {
         $this->youShouldNotCallMe(__METHOD__);
     }
@@ -183,7 +186,7 @@ class SingleModelDataProvider extends DefaultDataProvider
      *
      * When rows with duplicate ids are encountered (like from MCW for example), the dupes are inserted as new rows.
      *
-     * @param ModelInterface $objItem   The model to save.
+     * @param ModelInterface $item      The model to save.
      *
      * @param bool           $recursive Ignored as not relevant in this data provider.
      *
@@ -194,23 +197,21 @@ class SingleModelDataProvider extends DefaultDataProvider
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function save(ModelInterface $objItem, $recursive = false)
+    public function save(ModelInterface $item, $recursive = false)
     {
-        $query = 'INSERT INTO '.$this->strSource.' %s';
+        $query       = 'INSERT INTO ' . $this->strSource . ' %s';
         $queryUpdate = 'UPDATE %s';
 
-        foreach ($objItem->getPropertiesAsArray() as $field => $value) {
+        foreach ($item->getPropertiesAsArray() as $field => $value) {
             if ('id' === $field) {
                 continue;
             }
 
             $this->objDatabase
-                ->prepare
-                (
-                    $query.
-                    ' ON DUPLICATE KEY '.
-                    str_replace
-                    (
+                ->prepare(
+                    $query .
+                    ' ON DUPLICATE KEY ' .
+                    str_replace(
                         'SET ',
                         '',
                         $this->objDatabase
@@ -223,12 +224,12 @@ class SingleModelDataProvider extends DefaultDataProvider
                 ->execute();
         }
 
-        if ($objItem instanceof DefaultModel) {
+        if ($item instanceof DefaultModel) {
             // A pseudo id will prohibit an exception when calling ModelId::create() after saving
-            $objItem->setID($this->strSource.'::1');
+            $item->setID($this->strSource . '::1');
         }
 
-        return $objItem;
+        return $item;
     }
 
 
@@ -254,24 +255,25 @@ class SingleModelDataProvider extends DefaultDataProvider
      *
      * This data provider only returns true for the tstamp property.
      *
-     * @param string $strField The name of the property to check.
+     * @param string $field The name of the property to check.
      *
      * @return boolean
      */
-    public function fieldExists($strField)
+    public function fieldExists($field)
     {
-        return $this->objDatabase->prepare('SELECT * FROM '.$this->strSource.' WHERE field=?')->execute(
-            $strField
-        )->numRows ? true : false;
+        return $this->objDatabase
+            ->prepare('SELECT * FROM ' . $this->strSource . ' WHERE field=?')
+            ->execute($field)
+            ->numRows ? true : false;
     }
 
 
     /**
      * Unsupported in this data provider, throws an Exception.
      *
-     * @param mixed $mixID      Unused.
+     * @param mixed $id      Unused.
      *
-     * @param mixed $mixVersion Unused.
+     * @param mixed $version Unused.
      *
      * @return void
      *
@@ -279,7 +281,7 @@ class SingleModelDataProvider extends DefaultDataProvider
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getVersion($mixID, $mixVersion)
+    public function getVersion($id, $version)
     {
         $this->youShouldNotCallMe(__METHOD__);
     }
@@ -288,15 +290,15 @@ class SingleModelDataProvider extends DefaultDataProvider
     /**
      * Return null as versioning is not supported in this data provider.
      *
-     * @param mixed   $mixID         Unused.
+     * @param mixed   $id         Unused.
      *
-     * @param boolean $blnOnlyActive Unused.
+     * @param boolean $onlyActive Unused.
      *
      * @return null
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getVersions($mixID, $blnOnlyActive = false)
+    public function getVersions($id, $onlyActive = false)
     {
         // Sorry, versioning not supported.
         return null;
@@ -306,9 +308,9 @@ class SingleModelDataProvider extends DefaultDataProvider
     /**
      * Unsupported in this data provider, throws an Exception.
      *
-     * @param ModelInterface $objModel    Unused.
+     * @param ModelInterface $model    Unused.
      *
-     * @param string         $strUsername Unused.
+     * @param string         $username Unused.
      *
      * @return void
      *
@@ -316,7 +318,7 @@ class SingleModelDataProvider extends DefaultDataProvider
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function saveVersion(ModelInterface $objModel, $strUsername)
+    public function saveVersion(ModelInterface $model, $username)
     {
         $this->youShouldNotCallMe(__METHOD__);
     }
@@ -325,9 +327,9 @@ class SingleModelDataProvider extends DefaultDataProvider
     /**
      * Unsupported in this data provider, throws an Exception.
      *
-     * @param mixed $mixID      Unused.
+     * @param mixed $id      Unused.
      *
-     * @param mixed $mixVersion Unused.
+     * @param mixed $version Unused.
      *
      * @return void
      *
@@ -335,7 +337,7 @@ class SingleModelDataProvider extends DefaultDataProvider
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function setVersionActive($mixID, $mixVersion)
+    public function setVersionActive($id, $version)
     {
         $this->youShouldNotCallMe(__METHOD__);
     }
@@ -344,7 +346,7 @@ class SingleModelDataProvider extends DefaultDataProvider
     /**
      * Unsupported in this data provider, throws an Exception.
      *
-     * @param mixed $mixID Unused.
+     * @param mixed $id Unused.
      *
      * @return void
      *
@@ -352,7 +354,7 @@ class SingleModelDataProvider extends DefaultDataProvider
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getActiveVersion($mixID)
+    public function getActiveVersion($id)
     {
         $this->youShouldNotCallMe(__METHOD__);
     }
@@ -361,9 +363,9 @@ class SingleModelDataProvider extends DefaultDataProvider
     /**
      * Unsupported in this data provider, throws an Exception.
      *
-     * @param ModelInterface $objModel1 Unused.
+     * @param ModelInterface $model1 Unused.
      *
-     * @param ModelInterface $objModel2 Unused.
+     * @param ModelInterface $model2 Unused.
      *
      * @return void
      *
@@ -371,7 +373,7 @@ class SingleModelDataProvider extends DefaultDataProvider
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function sameModels($objModel1, $objModel2)
+    public function sameModels($model1, $model2)
     {
         $this->youShouldNotCallMe(__METHOD__);
     }
@@ -380,11 +382,11 @@ class SingleModelDataProvider extends DefaultDataProvider
     /**
      * Unsupported in this data provider, throws an Exception.
      *
-     * @param string $strSourceSQL Unused.
+     * @param string $sourceSql Unused.
      *
-     * @param string $strSaveSQL   Unused.
+     * @param string $saveSql   Unused.
      *
-     * @param string $strTable     Unused.
+     * @param string $table     Unused.
      *
      * @return void
      *
@@ -392,7 +394,7 @@ class SingleModelDataProvider extends DefaultDataProvider
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    protected function insertUndo($strSourceSQL, $strSaveSQL, $strTable)
+    protected function insertUndo($sourceSql, $saveSql, $table)
     {
         $this->youShouldNotCallMe(__METHOD__);
     }

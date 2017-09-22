@@ -1,25 +1,32 @@
 <?php
+
 /**
- * Single model DataProvider for DcGeneral
+ * This file is part of richardhj/dc-general-single-model.
  *
- * Copyright (c) 2016 Richard Henkenjohann
+ * Copyright (c) 2016-2017 Richard Henkenjohann
  *
- * @package DcGeneral
- * @author  Richard Henkenjohann <richardhenkenjohann@googlemail.com>
+ * @package   richardhj/contao-textfield-multiple
+ * @author    Richard Henkenjohann <richardhenkenjohann@googlemail.com>
+ * @copyright 2016-2017 Richard Henkenjohann
+ * @license   https://github.com/richardhj/dc-general-single-model/blob/master/LICENSE LGPL-3.0
  */
 
-namespace DcGeneral\Contao\Model;
+namespace Richardhj\DcGeneral\Contao\Model;
+
+use Contao\Database;
 
 
 /**
  * Class AbstractSingleModel
- * @package DcGeneral\Contao\Model
+ *
+ * @package Richardhj\DcGeneral\Contao\Model
  */
 abstract class AbstractSingleModel
 {
 
     /**
      * Table name
+     *
      * @var string
      */
     protected static $table;
@@ -27,6 +34,7 @@ abstract class AbstractSingleModel
 
     /**
      * Data
+     *
      * @var array
      */
     protected $data = [];
@@ -34,6 +42,7 @@ abstract class AbstractSingleModel
 
     /**
      * Modified keys
+     *
      * @var array
      */
     protected $modifiedKeys = [];
@@ -42,7 +51,7 @@ abstract class AbstractSingleModel
     /**
      * @var static
      */
-    private static $objInstance;
+    private static $instance;
 
 
     /**
@@ -51,7 +60,7 @@ abstract class AbstractSingleModel
      */
     public function __construct()
     {
-        $result = \Database::getInstance()->query('SELECT * FROM '.static::$table);
+        $result = Database::getInstance()->query('SELECT * FROM ' . static::$table);
 
         if (null !== $result) {
             while ($result->next()) {
@@ -66,44 +75,44 @@ abstract class AbstractSingleModel
      */
     public static function getInstance()
     {
-        if (null === static::$objInstance) {
-            static::$objInstance = new static();
+        if (null === static::$instance) {
+            static::$instance = new static();
         }
 
-        return static::$objInstance;
+        return static::$instance;
     }
 
 
     /**
      * Set an object property
      *
-     * @param string $strKey   The property name
-     * @param mixed  $varValue The property value
+     * @param string $key   The property name
+     * @param mixed  $value The property value
      *
      * @return self
      */
-    public function setProperty($strKey, $varValue)
+    public function setProperty($key, $value)
     {
-        if ($this->getProperty($strKey) === $varValue) {
+        if ($value === $this->getProperty($key)) {
             return $this;
         }
 
-        $this->data[$strKey] = $varValue;
-        return $this->markModified($strKey);
+        $this->data[$key] = $value;
+        return $this->markModified($key);
     }
 
 
     /**
      * Return an object property
      *
-     * @param string $strKey The property key
+     * @param string $key The property key
      *
      * @return mixed|null The property value or null
      */
-    public function getProperty($strKey)
+    public function getProperty($key)
     {
-        if (isset($this->data[$strKey])) {
-            return $this->data[$strKey];
+        if (isset($this->data[$key])) {
+            return $this->data[$key];
         }
 
         return null;
@@ -124,14 +133,14 @@ abstract class AbstractSingleModel
     /**
      * Mark a field as modified
      *
-     * @param string $strKey The field key
+     * @param string $key The field key
      *
      * @return self
      */
-    public function markModified($strKey)
+    public function markModified($key)
     {
-        if (!isset($this->modifiedKeys[$strKey])) {
-            $this->modifiedKeys[$strKey] = $this->data[$strKey];
+        if (!isset($this->modifiedKeys[$key])) {
+            $this->modifiedKeys[$key] = $this->data[$key];
         }
 
         return $this;
@@ -140,22 +149,23 @@ abstract class AbstractSingleModel
 
     /**
      * Save modified keys in database
+     *
      * @return self
      */
     public function save()
     {
-        $query = 'INSERT INTO '.static::$table . ' %s';
+        $query       = 'INSERT INTO ' . static::$table . ' %s';
         $queryUpdate = 'UPDATE %s';
 
         foreach ($this->modifiedKeys as $field) {
-            \Database::getInstance()
+            Database::getInstance()
                 ->prepare(
-                    $query.
-                    ' ON DUPLICATE KEY '.
+                    $query .
+                    ' ON DUPLICATE KEY ' .
                     str_replace(
                         'SET ',
                         '',
-                        \Database::getInstance()
+                        Database::getInstance()
                             ->prepare($queryUpdate)
                             ->set(['value' => $this->getProperty($field)])
                             ->query
